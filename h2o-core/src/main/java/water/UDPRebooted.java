@@ -12,7 +12,6 @@ import water.util.Log;
 
 public class UDPRebooted extends UDP {
   public static boolean BIG_DEBUG = false;
-  
   public static enum T {
     none,
     reboot,
@@ -24,6 +23,13 @@ public class UDPRebooted extends UDP {
 
     public void send(H2ONode target) {
       assert this != none;
+      // Note! To ensure that H2O version without the PUBDEV-4959 fix does not bring H2O with this fix into some unwanted
+      // state we need to first discover if we are indeed receiving shutdown packet from a H2O version with this fix.
+      // For this, we overload this first byte which is sent in both versions and contain ordinal number of the request type.
+      // If we choose number different than the possible ordinal number we can safely discover on which version we are running.
+
+      // On older versions we proceed in the original buggy way. When we discover that we run on a new version we can check if
+      // the shutdown request comes from the node in the current cluster
       new AutoBuffer(target,udp.rebooted._prior).putUdp(udp.rebooted).put1(42).put1(ordinal()).putInt(H2O.SELF._heartbeat._cloud_name_hash).close();
     }
     void broadcast() { send(H2O.SELF); }
@@ -33,7 +39,7 @@ public class UDPRebooted extends UDP {
     if( first_byte != UDP.udp.rebooted.ordinal() ) return;
     int type = ab.get1();
     if(type == 42) { // we are running on a version with PUBDEV-4959 fix
-      type = ab.get1();
+      type = ab.get1(); // read the real type
       int cloud_name_hash_origin = ab.getInt();
       if (cloud_name_hash_origin == H2O.SELF._heartbeat._cloud_name_hash) {
         suicide(T.values()[type], ab._h2o);

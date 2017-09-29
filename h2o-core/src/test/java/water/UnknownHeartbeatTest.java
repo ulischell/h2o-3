@@ -29,10 +29,6 @@ public class UnknownHeartbeatTest extends TestUtil{
   @Test
   public void testIgnoreUnknownShutdownTask(){
     AutoBuffer ab = new AutoBuffer(H2O.SELF, UDP.udp.rebooted._prior);
-    // Note! To ensure that H2O version without the PUBDEV-4959 fix does not bring H2O with this fix into some unwanted
-    // state we need to first discover if we are indeed receiving shutdown packet from a H2O version with this fix.
-    // For this, we overload this first byte which is sent in both versions and contain ordinal number of the request type.
-    // If we choose number different than the possible ordinal number we can safely discover on which version we are running.
     ab.putUdp(UDP.udp.rebooted, 65400).put1(42).put1(UDPRebooted.T.error.ordinal()).putInt(777); // 777 is the hashcode of the origin cloud
     ab.close();
 
