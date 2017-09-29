@@ -3,6 +3,5 @@
 buildH2O {
   mode = 'merge'
   testsSize = 'small'
-  jobName = 'h2o_master_DEV_small'
+  jobName = 'H2O-3-Pipeline/PR-1562'
 }
-

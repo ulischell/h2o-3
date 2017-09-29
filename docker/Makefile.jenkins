@@ -11,7 +11,7 @@ build-h2o-3:
 	@echo "+--Building H2O-3--+"
 	@echo
 	@echo "+--Cleaning--+"
-	./gradlew clean --no-daemon
+	./gradlew clean
 	@echo
 	@echo "+--Building--+"
 	./gradlew build -x test
