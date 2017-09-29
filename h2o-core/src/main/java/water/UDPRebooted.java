@@ -33,6 +33,7 @@ public class UDPRebooted extends UDP {
     if( first_byte != UDP.udp.rebooted.ordinal() ) return;
     int type = ab.get1();
     if(type == 42) { // we are running on a version with PUBDEV-4959 fix
+      type = ab.get1();
       int cloud_name_hash_origin = ab.getInt();
       if (cloud_name_hash_origin == H2O.SELF._heartbeat._cloud_name_hash) {
         suicide(T.values()[type], ab._h2o);
