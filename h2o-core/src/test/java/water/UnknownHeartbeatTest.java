@@ -42,7 +42,7 @@ public class UnknownHeartbeatTest extends TestUtil{
 
   @Test
   public void testIgnoreUnknownShutdownTaskOldVersion(){
-    // Test that when request comes from the old H2O version the cluster still gets killed
+    // Test that when request comes from the old H2O version ( older than 3.14.0.4 where the fix is implemented )
     AutoBuffer ab = new AutoBuffer(H2O.SELF, UDP.udp.rebooted._prior);
     ab.putUdp(UDP.udp.rebooted, 65400).put1(UDPRebooted.T.error.ordinal()).putInt(777); // 777 is the hashcode of the origin cloud
     ab.close();
