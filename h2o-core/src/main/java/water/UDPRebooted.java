@@ -28,8 +28,9 @@ public class UDPRebooted extends UDP {
       // For this, we overload this first byte which is sent in both versions and contain ordinal number of the request type.
       // If we choose number different than the possible ordinal number we can safely discover on which version we are running.
 
-      // On older versions we proceed in the original buggy way. When we discover that we run on a new version we can check if
+      // When we discover that we run on a new version we can check if
       // the shutdown request comes from the node in the current cluster
+      // otherwise we just ignore the request
       new AutoBuffer(target,udp.rebooted._prior).putUdp(udp.rebooted).put1(42).put1(ordinal()).putInt(H2O.SELF._heartbeat._cloud_name_hash).close();
     }
     void broadcast() { send(H2O.SELF); }
@@ -45,8 +46,11 @@ public class UDPRebooted extends UDP {
         suicide(T.values()[type], ab._h2o);
       }
     }else{
-      suicide(T.values()[type], ab._h2o);
+      Log.warn("Receive "+ T.values()[type].toString()+ " request from H2O with older version than 3.14.0.4. This request" +
+              " will be ignored");
     }
+    // if we receive request from H2O with a wrong version, just ignore the request
+
   }
 
 

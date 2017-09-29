@@ -1,11 +1,9 @@
 package water;
 
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 public class UnknownHeartbeatTest extends TestUtil{
   @BeforeClass() public static void setup() {
     stall_till_cloudsize(1);
@@ -42,9 +40,6 @@ public class UnknownHeartbeatTest extends TestUtil{
     // If we got here without exception we're good
   }
 
-  @Rule
-  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-
   @Test
   public void testIgnoreUnknownShutdownTaskOldVersion(){
     // Test that when request comes from the old H2O version the cluster still gets killed
@@ -58,8 +53,6 @@ public class UnknownHeartbeatTest extends TestUtil{
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    
-    exit.expectSystemExitWithStatus(-1);
   }
 
 }
