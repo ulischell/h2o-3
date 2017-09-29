@@ -24,7 +24,7 @@ public class UDPRebooted extends UDP {
 
     public void send(H2ONode target) {
       assert this != none;
-      new AutoBuffer(target,udp.rebooted._prior).putUdp(udp.rebooted).put1(ordinal()).putInt(H2O.SELF._heartbeat._cloud_name_hash).close();
+      new AutoBuffer(target,udp.rebooted._prior).putUdp(udp.rebooted).put1(42).put1(ordinal()).putInt(H2O.SELF._heartbeat._cloud_name_hash).close();
     }
     void broadcast() { send(H2O.SELF); }
   }
