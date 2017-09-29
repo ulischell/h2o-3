@@ -1,10 +1,11 @@
 package water;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 public class UnknownHeartbeatTest extends TestUtil{
   @BeforeClass() public static void setup() {
     stall_till_cloudsize(1);
@@ -40,4 +41,25 @@ public class UnknownHeartbeatTest extends TestUtil{
     }
     // If we got here without exception we're good
   }
+
+  @Rule
+  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
+  @Test
+  public void testIgnoreUnknownShutdownTaskOldVersion(){
+    // Test that when request comes from the old H2O version the cluster still gets killed
+    AutoBuffer ab = new AutoBuffer(H2O.SELF, UDP.udp.rebooted._prior);
+    ab.putUdp(UDP.udp.rebooted, 65400).put1(UDPRebooted.T.error.ordinal()).putInt(777); // 777 is the hashcode of the origin cloud
+    ab.close();
+
+    // Give it time so the packet can arrive
+    try {
+      Thread.sleep(2000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    
+    exit.expectSystemExitWithStatus(-1);
+  }
+
 }
