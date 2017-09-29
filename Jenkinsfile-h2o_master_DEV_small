@@ -1,4 +1,4 @@
-@Library('h2o3-shared-lib') _
+@Library('h2o3-shared-lib@mr/ita-9-run-for-pr') _
 
 buildH2O {
   mode = 'merge'
